@@ -17,6 +17,14 @@ div {
 	flex-wrap: column wrap;
 }
 
+#totalCount {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    text-align: center;
+    width: 100%;
+}
+
 #map {
     display: flex;
     justify-content: center;
@@ -28,7 +36,7 @@ div {
 
 #graph {
 	display: flex;
-	order: 2;
+	order: 1;
 }
 
 .india-map-container{
@@ -74,7 +82,3 @@ div {
         height: 600px;
     }
 }
-
-
-
-
