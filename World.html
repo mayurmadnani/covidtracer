@@ -11,7 +11,6 @@
     <link rel="stylesheet" href="css/jquery-jvectormap-2.0.5.css" type="text/css" media="screen" />
     <link rel="stylesheet" href="css/style.css" type="text/css" media="all" />
     <script src="utils/map_codes.js"></script>
-    <script src="mock/data_world.js"></script>
 </head>
 
 <body>
@@ -23,7 +22,7 @@
     <div class="map-container">
         <div id="map"></div>
     </div>
-    
+
     <div id="graph-container">
         <canvas id="graph" />
     </div>
@@ -32,46 +31,12 @@
 </html>
 <script>
 
+    var ctx = document.getElementById('graph').getContext('2d');
     var selected_code = null;
     var chart = null;
 
-    // var timeseries_data= (async () => {
-    //     let response = await fetch("https://pomber.github.io/covid19/timeseries.json");
-    //     timeseries_data = await response.json();
-    // })();
-    
-    var confirmed_cases = {};
-    for (country in timeseries_data) {
-        confirmed_cases[country_to_code[country]] = timeseries_data[country].slice(-1).pop().confirmed;
-    };
-
-    var ctx = document.getElementById('graph').getContext('2d');
-
-    $(function () {
-        $('#map').vectorMap({
-            map: 'world_merc',
-            series: {
-                regions: [{
-                    values: confirmed_cases,
-                    scale: ['#C8EEFF', '#0071A4'],
-                    normalizeFunction: 'polynomial'
-                }]
-            },
-            onRegionTipShow: function (e, el, code) {
-                el.html(el.html() + ' (Count - ' + confirmed_cases[code] + ')');
-                if (selected_code
-                    != code) {
-                    selected_code
-                        = code;
-                    plotForCountry(selected_code
-                    );
-                }
-            }
-        });
-    });
-
-    var plotForCountry = function (code) {
-        var tss = timeseries_data[code_to_country[code]];
+    var plotForCountry = function (country_code, timeseries_data) {
+        var tss = timeseries_data[code_to_country[country_code]];
         var labels = tss.map(function (e) { return moment(e.date, "YYYY-MM-DD").format('LL'); });
         var confirmed = tss.map(function (e) { return e.confirmed; });
         var deaths = tss.map(function (e) { return e.deaths; });
@@ -110,7 +75,7 @@
             options: {
                 title: {
                     display: true,
-                    text: 'Confirmed Cases - ' + code_to_country[code]
+                    text: 'Confirmed Cases - ' + code_to_country[country_code]
                 },
                 scales: {
                     xAxes: [{
@@ -119,7 +84,42 @@
                 }
             }
         });
-    }
+    };
+
+    fetch("https://pomber.github.io/covid19/timeseries.json")
+        .then(response => response.json())
+        .then(timeseries_data => {
+            var confirmed_cases = {};
+            for (country in timeseries_data) {
+                confirmed_cases[country_to_code[country]] = timeseries_data[country].slice(-1).pop().confirmed;
+            };
+
+            $(function () {
+                $('#map').vectorMap({
+                    map: 'world_merc',
+                    series: {
+                        regions: [{
+                            values: confirmed_cases,
+                            scale: ['#C8EEFF', '#0071A4'],
+                            normalizeFunction: 'polynomial'
+                        }]
+                    },
+                    onRegionTipShow: function (e, el, code) {
+                        el.html(el.html() + ' (Count - ' + confirmed_cases[code] + ')');
+                        if (selected_code != code) {
+                            selected_code = code;
+                            plotForCountry(selected_code, timeseries_data);
+                        }
+                    }
+                });
+            });
+
+        }
+        );
+
+
+
+
 
 
 
