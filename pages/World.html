@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>COVID-19</title>
+    <script src="../js/jquery-3.4.1.min.js"></script>
+    <script src="../js/jquery-jvectormap-2.0.5.min.js"></script>
+    <script src="../js/jquery-jvectormap-world-merc.js"></script>
+    <script src="../js/moment-2.24.0.min.js"></script>
+    <script src="../js/Chart-2.9.3.min.js"></script>
+    <link rel="stylesheet" href="../css/jquery-jvectormap-2.0.5.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="../css/style.css" type="text/css" media="all" />
+    <script src="../utils/map_codes.js"></script>
+    <script src="../mock/data_world.js"></script>
+</head>
+
+<body>
+    <div class="map-container">
+        <div id="map"></div>
+    </div>
+    <br />
+    <div id="graph-container">
+        <canvas id="graph" />
+    </div>
+</body>
+
+</html>
+<script>
+
+    var selected_code = null;
+    var chart = null;
+
+    // var timeseries_data= (async () => {
+    //     let response = await fetch("https://pomber.github.io/covid19/timeseries.json");
+    //     timeseries_data = await response.json();
+    // })();
+    
+    var confirmed_cases = {};
+    for (country in timeseries_data) {
+        confirmed_cases[country_to_code[country]] = timeseries_data[country].slice(-1).pop().confirmed;
+    };
+
+    var ctx = document.getElementById('graph').getContext('2d');
+
+    $(function () {
+        $('#map').vectorMap({
+            map: 'world_merc',
+            series: {
+                regions: [{
+                    values: confirmed_cases,
+                    scale: ['#C8EEFF', '#0071A4'],
+                    normalizeFunction: 'polynomial'
+                }]
+            },
+            onRegionTipShow: function (e, el, code) {
+                el.html(el.html() + ' (Count - ' + confirmed_cases[code] + ')');
+                if (selected_code
+                    != code) {
+                    selected_code
+                        = code;
+                    plotForCountry(selected_code
+                    );
+                }
+            }
+        });
+    });
+
+    var plotForCountry = function (code) {
+        var tss = timeseries_data[code_to_country[code]];
+        var labels = tss.map(function (e) { return moment(e.date, "YYYY-MM-DD").format('LL'); });
+        var confirmed = tss.map(function (e) { return e.confirmed; });
+        var deaths = tss.map(function (e) { return e.deaths; });
+        var recovered = tss.map(function (e) { return e.recovered; });
+
+        chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: "Confirmed",
+                    data: confirmed,
+                    borderWidth: 2,
+                    backgroundColor: "rgba(6, 167, 125, 0.1)",
+                    borderColor: "rgba(6, 167, 125, 1)",
+                    pointBackgroundColor: "rgba(225, 225, 225, 1)",
+                    pointBorderColor: "rgba(6, 167, 125, 1)",
+                }, {
+                    label: "Deaths",
+                    data: deaths,
+                    borderWidth: 2,
+                    backgroundColor: "rgba(246, 71, 64, 0.1)",
+                    borderColor: "rgba(246, 71, 64, 1)",
+                    pointBackgroundColor: "rgba(225, 225, 225, 1)",
+                    pointBorderColor: "rgba(246, 71, 64, 1)",
+                }, {
+                    label: "Recovered",
+                    data: recovered,
+                    borderWidth: 2,
+                    backgroundColor: "rgba(26, 143, 227, 0.1)",
+                    borderColor: "rgba(26, 143, 227, 1)",
+                    pointBackgroundColor: "rgba(225, 225, 225, 1)",
+                    pointBorderColor: "rgba(26, 143, 227, 1)",
+                }]
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: 'Confirmed Cases - ' + code_to_country[code]
+                },
+                scales: {
+                    xAxes: [{
+                        type: 'time'
+                    }]
+                }
+            }
+        });
+    }
+
+
+
+
+
+
+</script>

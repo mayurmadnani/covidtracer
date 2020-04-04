@@ -1,0 +1,68 @@
+
+div {
+	display: flex;
+	flex-direction: column;
+	flex-wrap: column wrap;
+}
+
+#map {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+	order: 1;
+	padding: 50px;
+    height: 100%;
+}
+
+#graph {
+	display: flex;
+	order: 2;
+}
+
+.india-map-container{
+    display: flex;
+    margin: 10px;
+    height: 100vh;
+}
+
+.map-container, .graph-container{
+    display: flex;
+    height: 300px;
+}
+
+.text-center{
+    text-align:center;
+    font-weight: 300;
+    font-size: 2rem;
+}
+
+.map-container:after, .clearfix{
+    display: flex;
+    content: '';
+    clear: both;
+}
+
+@media only screen and (min-width: 576px) {
+    .map-container, .graph-container{
+        height: 350px;
+    }
+}
+@media only screen and (min-width: 768px) {
+    .map-container, .graph-container{
+        height: 400px;
+    }
+}
+@media only screen and (min-width: 992px) {
+    .map-container, .graph-container{
+        height: 500px;
+    }
+}
+@media only screen and (min-width: 1200px) {
+    .map-container, .graph-container{
+        height: 600px;
+    }
+}
+
+
+
+

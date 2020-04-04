@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>COVID-19</title>
+    <script src="../js/jquery-3.4.1.min.js"></script>
+    <script src="../js/jquery-jvectormap-2.0.5.min.js"></script>
+    <script src="../js/jquery-jvectormap-in-merc.js"></script>
+    <link rel="stylesheet" href="../css/jquery-jvectormap-2.0.5.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="../css/style.css" type="text/css" media="all" />
+    <script src="../utils/map_codes.js"></script>
+    <script src="../mock/data_in.js"></script>
+</head>
+
+<body>
+    <div class="india-map-container">
+        <div id="map"></div>
+    </div>
+</body>
+
+</html>
+<script>
+
+    var confirmed_cases = {};
+    for (state in in_data) {
+        confirmed_cases[india_state_to_code[state]] = in_data[state].confirmed;
+    };
+
+    $(function () {
+        $('#map').vectorMap({
+            map: 'in_merc',
+            series: {
+                regions: [{
+                    values: confirmed_cases,
+                    scale: ['#C8EEFF', '#0071A4'],
+                    normalizeFunction: 'polynomial'
+                }]
+            },
+            onRegionTipShow: function (e, el, code) {
+                var state = india_code_to_state[code];
+                var state_data = in_data[state];
+                el.html(el.html() + '<br /> <br />Confirmed: ' + state_data.confirmed + '<br />Recovered: ' + state_data.recovered + '<br />Deaths: ' + state_data.deaths);
+            }
+        });
+    });
+
+
+
+</script>
