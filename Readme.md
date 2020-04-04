@@ -2,6 +2,7 @@
 
 Source of the main site: 
 ## https://covidtracer.netlify.com/
+## https://mayurmadnani.github.io/covidtracer/
 
 Data sources:
 
