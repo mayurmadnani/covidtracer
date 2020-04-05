@@ -108,6 +108,8 @@
                     },
                     onRegionTipShow: function (e, el, code) {
                         el.html(el.html() + ' (Count - ' + confirmed_cases[code] + ')');
+                    },
+                    onRegionClick: function (e, code) {
                         if (selected_code != code) {
                             selected_code = code;
                             plotForCountry(selected_code, timeseries_data);
