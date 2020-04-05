@@ -14,7 +14,7 @@
 div {
 	display: flex;
 	flex-direction: column;
-	flex-wrap: column wrap;
+	flex-wrap: nowrap;
 }
 
 #totalCount {
