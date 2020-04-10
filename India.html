@@ -20,10 +20,14 @@
         <li><a href="India.html">India</a></li>
     </ul>
 
-    <h3 id="totalCount" />
+
 
     <div class="india-map-container">
         <div id="map"></div>
+    </div>
+    <div id="table-container">
+        <h4 id="india-table" />
+        <h3 id="totalCount" />
     </div>
 </body>
 
@@ -34,6 +38,8 @@
         .then(data => {
             var html = $.parseHTML(data);
             var state_data_table = $('#state-data', html);
+            
+            var india_table = "<table><tr><th><u>State</u></th><th><u>Confirmed</u></th><th><u>Recovered</u></th><th><u>Deaths</u></th></tr>"
 
             var india_data = {};
             $(state_data_table).find('tbody tr').each(function () {
@@ -45,8 +51,11 @@
                     counts.recovered = parseInt($td.eq(3).text());
                     counts.deaths = parseInt($td.eq(4).text());
                     india_data[state] = counts;
+                    india_table += "<tr><td>"+state+"</td>"+"<td>"+counts.confirmed+"</td>"+"<td>"+counts.recovered+"</td>"+"<td>"+counts.deaths+"</td></tr>";
                 }
                 else if($td.length==4) {
+                    india_table += "</table>";
+                    $('#india-table').append(india_table);
                     $('#totalCount')
                         .append('<br />Confirmed: ' + parseInt($td.eq(1).text()))
                         .append('<br />Recovered: ' + parseInt($td.eq(2).text()))
