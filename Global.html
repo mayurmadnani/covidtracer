@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="css/jquery-jvectormap-2.0.5.css" type="text/css" media="screen" />
     <link rel="stylesheet" href="css/gh-fork-ribbon-0.2.3.min.css" />
     <link rel="stylesheet" href="css/style.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="css/global_page.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="css/swtich.css" type="text/css" media="all" />
     <script src="utils/map_codes.js"></script>
 </head>
 
@@ -26,6 +28,18 @@
         <div id="map"></div>
     </div>
 
+    <div id="toggleScale">
+        The flattening of the curve on LOG scale can be misleading. Refer the LINEAR scale graph for the total outbreak.
+        <br />
+        <div class="onoffswitch">
+            <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked>
+            <label class="onoffswitch-label" for="myonoffswitch">
+                <span class="onoffswitch-inner"></span>
+                <span class="onoffswitch-switch"></span>
+            </label>
+        </div>
+    </div>
+
     <div id="graph-container">
         <canvas id="graph" />
     </div>
@@ -33,17 +47,42 @@
 
 </html>
 <script>
-
     var ctx = document.getElementById('graph').getContext('2d');
     var selected_code = null;
     var chart = null;
 
-    var plotForCountry = function (country_code, timeseries_data) {
+    var linearScaleOptions = [{
+        id: 'y-axis-0',
+        type: 'linear'
+    }];
+
+    var logarithmicScaleOptions = [{
+        id: 'y-axis-0',
+        type: 'logarithmic'
+    }];
+
+    Chart.scaleService.updateScaleDefaults('logarithmic', {
+        ticks: {
+            callback: function(tick, index, ticks) {
+                return tick.toLocaleString()
+            }
+        }
+    });
+
+    var plotForCountry = function(country_code, timeseries_data) {
         var tss = timeseries_data[code_to_country[country_code]];
-        var labels = tss.map(function (e) { return moment(e.date, "YYYY-MM-DD").format('LL'); });
-        var confirmed = tss.map(function (e) { return e.confirmed; });
-        var deaths = tss.map(function (e) { return e.deaths; });
-        var recovered = tss.map(function (e) { return e.recovered; });
+        var labels = tss.map(function(e) {
+            return moment(e.date, "YYYY-MM-DD").format('LL');
+        });
+        var confirmed = tss.map(function(e) {
+            return e.confirmed;
+        });
+        var deaths = tss.map(function(e) {
+            return e.deaths;
+        });
+        var recovered = tss.map(function(e) {
+            return e.recovered;
+        });
 
         chart = new Chart(ctx, {
             type: 'line',
@@ -76,6 +115,16 @@
                 }]
             },
             options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                layout: {
+                    padding: {
+                        left: 50,
+                        right: 50,
+                        top: 50,
+                        bottom: 50
+                    }
+                },
                 title: {
                     display: true,
                     text: 'Confirmed Cases - ' + code_to_country[country_code]
@@ -83,7 +132,8 @@
                 scales: {
                     xAxes: [{
                         type: 'time'
-                    }]
+                    }],
+                    yAxes: logarithmicScaleOptions
                 }
             }
         });
@@ -97,7 +147,7 @@
                 confirmed_cases[country_to_code[country]] = timeseries_data[country].slice(-1).pop().confirmed;
             };
 
-            $(function () {
+            $(function() {
                 $('#map').vectorMap({
                     map: 'world_merc',
                     series: {
@@ -107,10 +157,10 @@
                             normalizeFunction: 'polynomial'
                         }]
                     },
-                    onRegionTipShow: function (e, el, code) {
+                    onRegionTipShow: function(e, el, code) {
                         el.html(el.html() + ' (Count - ' + confirmed_cases[code] + ')');
                     },
-                    onRegionClick: function (e, code) {
+                    onRegionClick: function(e, code) {
                         if (selected_code != code) {
                             selected_code = code;
                             plotForCountry(selected_code, timeseries_data);
@@ -119,16 +169,19 @@
                 });
             });
 
-        }
-        );
+        });
 
 
-
-
-
-
-
-
-
-
+    $("#myonoffswitch").on('click', function() {
+        console.log($(this)[0].checked);
+        if ($(this)[0].checked)
+            chart.options.scales.yAxes = Chart.helpers.scaleMerge(Chart.defaults.scale, {
+                yAxes: logarithmicScaleOptions
+            }).yAxes;
+        else
+            chart.options.scales.yAxes = Chart.helpers.scaleMerge(Chart.defaults.scale, {
+                yAxes: linearScaleOptions
+            }).yAxes;
+        chart.update();
+    });
 </script>
