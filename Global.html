@@ -56,9 +56,22 @@
         type: 'linear'
     }];
 
-    var logarithmicScaleOptions = [{
+    var logarithmicScaleOptions = (data_array) => [{
         id: 'y-axis-0',
-        type: 'logarithmic'
+        type: 'logarithmic',
+        ticks: {
+            min: Math.min.apply(this, data_array),
+            max: Math.max.apply(this, data_array)
+        },
+        afterBuildTicks: function(chartObj) {
+            var max = Math.max(...chartObj.ticks);
+            chartObj.ticks = [];
+            chartObj.ticks.push(0);
+            chartObj.ticks.push(1);
+            while (chartObj.ticks[chartObj.ticks.length - 1] <= max) {
+                chartObj.ticks.push(chartObj.ticks[chartObj.ticks.length - 1] * 2);
+            }
+        }
     }];
 
     Chart.scaleService.updateScaleDefaults('logarithmic', {
@@ -84,6 +97,8 @@
             return e.recovered;
         });
 
+        if (chart != null)
+            chart.destroy();
         chart = new Chart(ctx, {
             type: 'line',
             data: {
@@ -133,7 +148,7 @@
                     xAxes: [{
                         type: 'time'
                     }],
-                    yAxes: logarithmicScaleOptions
+                    yAxes: logarithmicScaleOptions(confirmed)
                 }
             }
         });
@@ -176,7 +191,7 @@
         console.log($(this)[0].checked);
         if ($(this)[0].checked)
             chart.options.scales.yAxes = Chart.helpers.scaleMerge(Chart.defaults.scale, {
-                yAxes: logarithmicScaleOptions
+                yAxes: logarithmicScaleOptions(chart.data.datasets[0])
             }).yAxes;
         else
             chart.options.scales.yAxes = Chart.helpers.scaleMerge(Chart.defaults.scale, {
