@@ -39,29 +39,31 @@
             var html = $.parseHTML(data);
             var state_data_table = $('#state-data', html);
 
-            var india_table = "<table><tr><th><u>State</u></th><th><u>Confirmed</u></th><th><u>Recovered</u></th><th><u>Deaths</u></th></tr>"
+            var india_table = "<table><tr><th><u>State</u></th><th><u>Active</u></th><th><u>Recovered</u></th><th><u>Deaths</u></th><th><u>Confirmed</u></th></tr>"
 
             var india_data = {};
             $(state_data_table).find('tbody tr').each(function() {
                 $td = $(this).find('td');
-                if ($td.length == 5) {
+                if ($td.length == 6) {
                     state = $td.eq(1).text();
                     counts = {};
-                    counts.confirmed = parseInt($td.eq(2).text());
+                    counts.active = parseInt($td.eq(2).text());
                     counts.recovered = parseInt($td.eq(3).text());
                     counts.deaths = parseInt($td.eq(4).text());
+                    counts.confirmed = parseInt($td.eq(5).text());
                     if (state == 'Total#') {
                         india_table += "</table>";
                         $('#india-table').append(india_table);
                         $('#totalCount')
-                            .append('<br />Confirmed: ' + counts.confirmed)
+                            .append('<br />Active: ' + counts.active)
                             .append('<br />Recovered: ' + counts.recovered)
-                            .append('<br />Deaths: ' + counts.deaths);
+                            .append('<br />Deaths: ' + counts.deaths)
+                            .append('<br />Confirmed: ' + counts.confirmed);
                         return;
                     }
                     india_data[state] = counts;
-                    if (isNaN(counts.confirmed)) {
-                        counts.confirmed = ''
+                    if (isNaN(counts.active)) {
+                        counts.active = ''
                     }
                     if (isNaN(counts.recovered)) {
                         counts.recovered = ''
@@ -69,14 +71,17 @@
                     if (isNaN(counts.deaths)) {
                         counts.deaths = ''
                     }
-                    india_table += "<tr><td>" + state + "</td>" + "<td>" + counts.confirmed + "</td>" + "<td>" + counts.recovered + "</td>" + "<td>" + counts.deaths + "</td></tr>";
+                    if (isNaN(counts.confirmed)) {
+                        counts.confirmed = ''
+                    }
+                    india_table += "<tr><td>" + state + "</td>" + "<td>" + counts.active + "</td>" + "<td>" + counts.recovered + "</td>" + "<td>" + counts.deaths + "</td>" + "<td>" + counts.confirmed + "</td>" + "</tr>";
                 }
             });
 
 
-            var confirmed_cases = {};
+            var active_cases = {};
             for (state in india_data) {
-                confirmed_cases[india_state_to_code[state]] = india_data[state].confirmed;
+                active_cases[india_state_to_code[state]] = india_data[state].active;
             };
 
             $(function() {
@@ -85,7 +90,7 @@
                     map: 'in_merc',
                     series: {
                         regions: [{
-                            values: confirmed_cases,
+                            values: active_cases,
                             scale: ['#C8EEFF', '#0071A4'],
                             normalizeFunction: 'polynomial'
                         }]
@@ -93,7 +98,7 @@
                     onRegionTipShow: function(e, el, code) {
                         var state = india_code_to_state[code];
                         var state_data = india_data[state];
-                        el.html(el.html() + '<br /> <br />Confirmed: ' + state_data.confirmed + '<br />Recovered: ' + state_data.recovered + '<br />Deaths: ' + state_data.deaths);
+                        el.html(el.html() + '<br /> <br />Active: ' + state_data.active + '<br />Recovered: ' + state_data.recovered + '<br />Deaths: ' + state_data.deaths + '<br />Confirmed: ' + state_data.confirmed);
                     }
                 });
             });
