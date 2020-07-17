@@ -32,3 +32,18 @@ div {
     font-weight: 300;
     font-size: 2rem;
 }
+
+.flex-container {
+    display: flex;
+    flex-direction: column;
+    margin: 50px;
+}
+
+.flex-container>div {
+    background-color: powderblue;
+    color: rebeccapurple;
+    margin: 10px;
+    text-align: center;
+    line-height: 75px;
+    font-size: 30px;
+}
