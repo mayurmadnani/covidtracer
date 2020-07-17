@@ -33,7 +33,7 @@
 
 </html>
 <script>
-    fetch("https://www.mohfw.gov.in/#state-data")
+    fetch("https://cors-anywhere.herokuapp.com/https://www.mohfw.gov.in/#state-data")
         .then(response => response.text())
         .then(data => {
             var html = $.parseHTML(data);
