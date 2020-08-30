@@ -26,62 +26,97 @@
         <div id="map"></div>
     </div>
     <div id="table-container">
-        <h3 id="totalCount" />
+        <h3 id="totalCount">&#8593; &#8595; shows cases trend since yesterday</h3>
         <h4 id="india-table" />
     </div>
 </body>
 
 </html>
 <script>
-    fetch("https://cors-anywhere.herokuapp.com/https://www.mohfw.gov.in/#state-data")
-        .then(response => response.text())
+    fetch("https://cors-anywhere.herokuapp.com/https://www.mohfw.gov.in/data/datanew.json")
+        .then(response => response.json())
         .then(data => {
-            var html = $.parseHTML(data);
-            var state_data_table = $('#state-data', html);
+            var india_data = {}
+            cols_list = ["State/UT", "Active", "Cured", "Death", "Positive"];
+            new_counts_cols = ['new_active', 'new_cured', 'new_death', 'new_positive']
+            old_counts_cols = ['active', 'cured', 'death', 'positive']
 
-            var india_table = "<table><tr><th><u>State</u></th><th><u>Active</u></th><th><u>Recovered</u></th><th><u>Deaths</u></th><th><u>Confirmed</u></th></tr>"
-
-            var india_data = {};
-            $(state_data_table).find('tbody tr').each(function() {
-                $td = $(this).find('td');
-                if ($td.length == 6) {
-                    state = $td.eq(1).text();
-                    counts = {};
-                    counts.active = parseInt($td.eq(2).text());
-                    counts.recovered = parseInt($td.eq(3).text());
-                    counts.deaths = parseInt($td.eq(4).text());
-                    counts.confirmed = parseInt($td.eq(5).text());
-                    if (state == 'Total#') {
-                        india_table += "</table>";
-                        $('#india-table').append(india_table);
-                        $('#totalCount')
-                            .append('<br />Active: ' + counts.active)
-                            .append('<br />Recovered: ' + counts.recovered)
-                            .append('<br />Deaths: ' + counts.deaths)
-                            .append('<br />Confirmed: ' + counts.confirmed);
-                        return;
-                    }
-                    india_data[state] = counts;
-                    if (isNaN(counts.active)) {
-                        counts.active = ''
-                    }
-                    if (isNaN(counts.recovered)) {
-                        counts.recovered = ''
-                    }
-                    if (isNaN(counts.deaths)) {
-                        counts.deaths = ''
-                    }
-                    if (isNaN(counts.confirmed)) {
-                        counts.confirmed = ''
-                    }
-                    india_table += "<tr><td>" + state + "</td>" + "<td>" + counts.active + "</td>" + "<td>" + counts.recovered + "</td>" + "<td>" + counts.deaths + "</td>" + "<td>" + counts.confirmed + "</td>" + "</tr>";
+            data.forEach(entry => {
+                sno = entry["sno"]
+                if (sno == "11111") {
+                    $('#totalCount')
+                        .append('<br />Active: ' + entry.new_active)
+                        .append('<br />Recovered: ' + entry.new_cured)
+                        .append('<br />Deaths: ' + entry.new_death)
+                        .append('<br />Confirmed: ' + entry.new_positive);
+                    return;
                 }
+                state = entry["state_name"]
+                counts = {}
+                new_counts_cols.forEach(x => {
+                    counts[x] = entry[x]
+                })
+                old_counts_cols.forEach(x => {
+                    counts[x] = entry[x]
+                })
+
+                india_data[state] = counts
             });
+
+            var table = $("<table />");
+            var columnCount = cols_list.length;
+
+            var row = $(table[0].insertRow(-1));
+            for (var i = 0; i < columnCount; i++) {
+                var headerCell = $("<th><u></u></th>");
+                headerCell.html(cols_list[i]);
+                row.append(headerCell);
+            };
+
+            var up_red = "<span style='color:red;'>&#8593;</span>";
+            var up_green = "<span style='color:green;'>&#8593;</span>";
+            var down_red = "<span style='color:red;'>&#8595;</span>";
+            var down_green = "<span style='color:green;'>&#8595;</span>";
+
+            for (state in india_data) {
+                row = $(table[0].insertRow(-1));
+                var cell = $("<td />");
+                cell.html(state);
+                row.append(cell);
+                for (var count in new_counts_cols) {
+                    count = parseInt(count)
+                    cell = $("<td />");
+                    var new_count = india_data[state][new_counts_cols[count]]
+                    var old_count = india_data[state][old_counts_cols[count]]
+                    var sign = new_count - old_count
+                    var arrowhead = "    "
+                    if (sign > 0) {
+                        if (count == 1) {
+                            arrowhead += up_green;
+                        } else {
+                            arrowhead += up_red
+                        }
+                    }
+                    if (sign < 0) {
+                        if (count == 1) {
+                            arrowhead += down_red;
+                        } else {
+                            arrowhead += down_green;
+                        }
+                    }
+                    cell.html(new_count + arrowhead);
+                    row.append(cell);
+                }
+            }
+
+            var india_table = $("#india-table");
+            india_table.html("");
+            india_table.append(table);
 
 
             var active_cases = {};
             for (state in india_data) {
-                active_cases[india_state_to_code[state]] = india_data[state].active;
+                active_cases[india_state_to_code[state]] = india_data[state].new_active;
             };
 
             $(function() {
@@ -98,7 +133,7 @@
                     onRegionTipShow: function(e, el, code) {
                         var state = india_code_to_state[code];
                         var state_data = india_data[state];
-                        el.html(el.html() + '<br /> <br />Active: ' + state_data.active + '<br />Recovered: ' + state_data.recovered + '<br />Deaths: ' + state_data.deaths + '<br />Confirmed: ' + state_data.confirmed);
+                        el.html(el.html() + '<br /> <br />Active: ' + state_data.new_active + '<br />Cured: ' + state_data.new_cured + '<br />Deaths: ' + state_data.new_death + '<br />Confirmed: ' + state_data.new_positive);
                     }
                 });
             });
