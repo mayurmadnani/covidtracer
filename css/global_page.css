@@ -1,46 +1,50 @@
 .map-container,
 .graph-container {
-    display: flex;
-    height: 300px;
+  display: flex;
+  height: 300px;
 }
 
 #graph {
-    display: flex;
-    order: 1;
-    height: inherit;
+  display: flex;
+  order: 1;
+  height: inherit;
 }
 
 .map-container:after,
 .clearfix {
-    display: flex;
-    content: '';
-    clear: both;
+  display: flex;
+  content: '';
+  clear: both;
 }
 
 @media only screen and (min-width: 576px) {
-    .map-container,
-    .graph-container {
-        height: 350px;
-    }
+  .map-container,
+  .graph-container {
+    height: 350px;
+  }
 }
 
 @media only screen and (min-width: 768px) {
-    .map-container,
-    .graph-container {
-        height: 400px;
-    }
+  .map-container,
+  .graph-container {
+    height: 400px;
+  }
 }
 
 @media only screen and (min-width: 992px) {
-    .map-container,
-    .graph-container {
-        height: 500px;
-    }
+  .map-container,
+  .graph-container {
+    height: 500px;
+    margin-bottom: 50px;
+  }
+  .onoffswitch {
+    margin-top: 25px;
+  }
 }
 
 @media only screen and (min-width: 1200px) {
-    .map-container,
-    .graph-container {
-        height: 600px;
-    }
+  .map-container,
+  .graph-container {
+    height: 600px;
+  }
 }
