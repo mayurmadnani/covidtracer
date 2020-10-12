@@ -47,3 +47,40 @@ div {
     line-height: 75px;
     font-size: 30px;
 }
+
+#backToTopButton {
+    display: inline-block;
+    background-color: #0090e4;
+    border: none;
+    outline: none;
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    transition: background-color .3s,
+        opacity .5s, visibility .5s;
+    opacity: 0;
+    visibility: hidden;
+    z-index: 99;
+}
+
+#backToTopButton.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+#backToTopButton:hover {
+    background-color: #5db4e7;
+    cursor: pointer;
+}
+
+#backToTopButton::after {
+    content: "^";
+    font-weight: normal;
+    font-style: normal;
+    font-size: 2em;
+    line-height: 50px;
+    color: #fff;
+}
