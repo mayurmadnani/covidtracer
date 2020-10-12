@@ -64,6 +64,7 @@ div {
     opacity: 0;
     visibility: hidden;
     z-index: 99;
+    align-content: center;
 }
 
 #backToTopButton.show {
@@ -76,11 +77,15 @@ div {
     cursor: pointer;
 }
 
-#backToTopButton::after {
-    content: "^";
-    font-weight: normal;
-    font-style: normal;
-    font-size: 2em;
-    line-height: 50px;
-    color: #fff;
+.chevron {
+    color: #ffffff;
+    border-style: solid;
+    border-width: 0.25em 0.25em 0 0;
+    content: '';
+    display: inline-block;
+    height: 0.45em;
+    position: relative;
+    top: 0.15em;
+    transform: rotate(-45deg);
+    width: 0.45em;
 }
