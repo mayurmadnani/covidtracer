@@ -47,3 +47,45 @@ div {
     line-height: 75px;
     font-size: 30px;
 }
+
+#backToTopButton {
+    display: inline-block;
+    background-color: #0090e4;
+    border: none;
+    outline: none;
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    transition: background-color .3s,
+        opacity .5s, visibility .5s;
+    opacity: 0;
+    visibility: hidden;
+    z-index: 99;
+    align-content: center;
+}
+
+#backToTopButton.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+#backToTopButton:hover {
+    background-color: #5db4e7;
+    cursor: pointer;
+}
+
+.chevron {
+    color: #ffffff;
+    border-style: solid;
+    border-width: 0.25em 0.25em 0 0;
+    content: '';
+    display: inline-block;
+    height: 0.45em;
+    position: relative;
+    top: 0.15em;
+    transform: rotate(-45deg);
+    width: 0.45em;
+}
