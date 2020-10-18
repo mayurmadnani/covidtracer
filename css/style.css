@@ -1,9 +1,10 @@
 
 .header {
     margin: 0;
-    padding: 0 5% 0 5%;
+    padding: 0 3% 0 3%;
     background-color: #4fc8d1;
 	display: flex;
+	flex-direction:row;
 }
 
 .logo {
@@ -12,6 +13,7 @@
 	margin-bottom: 0;
 	font-size: 3em;
 	align-items: center;
+	flex-direction:row;
 }
 
 .logo img {
@@ -25,11 +27,15 @@ margin-left : 5%;
 margin-bottom: 0;
 /*margin-top: 12px;*/
 padding:0;
+flex-direction:row;
+align-items:center;
+
 }
 .nav ul {
 	list-style-type: none;
 	float:left;
 	padding: 0;
+	flex-direction:row;
 }
 
 .nav li {
@@ -47,23 +53,19 @@ li a {
 	font-weight: 600;
 }
 
-/*
-.active {
-	background-color: #F7B301;
-}
-*/
-
 .tracer {
 	margin: 50px 0px;
 	font-size: 2.5em;
-	text-align: center;
+/*	text-align: center;*/
+	flex-direction:row;
 }
 
 .column {
 	float: left;
     width: 25%;
     padding: 0 10px;
-	margin: 15px 10%;
+	margin: 15px 7% 15px 10%;
+/*	flex-direction:row;*/
 /*
 	margin-left: 10%;
 	margin-right: 10%;
@@ -74,6 +76,7 @@ li a {
 .column a {
 	text-decoration: none;
 	color: black;
+	
 }
 
 
@@ -90,11 +93,16 @@ li a {
   text-align: center;
 /*  background-color: #f1f1f1;*/
   background-color: #CEF7FA;
+/*  text-align: center;*/
+  align-items:center;
+  min-width: 210px;
 }
 
 .card img {
-	padding-left: 10%;
-	padding-right: 10%;
+	width: 128px;
+	height: auto;
+	margin-bottom: 15px;
+	display: inline-flex;
 }
 
 
@@ -109,6 +117,7 @@ hr {
 	padding: 10px 5%;
 	color: white;
 	font-size: 0.8em;
+	flex-direction:row;
 /*	text-align: center;*/
 	
 /* colors used
@@ -119,13 +128,13 @@ hr {
 */
 }
 
-/*
+/*previous code*/
+
 div {
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
 }
-*/
 
 #map {
     display: flex;
@@ -223,14 +232,24 @@ div {
 }
 
 
+
+
 @media screen and (max-width: 600px) {
+
+	.tracer {
+		flex-direction:column;
+	}
 	
   .column {
-    width: 50%;
+    width: 75%;
+	max-width: 300px; 
     display: inline-flex;
     margin-bottom: 20px;
-	margin-left:20%;
+	margin-left:10%;
 	margin-right: 0;
+	padding-right: 10%;
+/*	flex-direction:row;*/
+/*	  font-size: 3vw;*/
   }
 	
   .header {
