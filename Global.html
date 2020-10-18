@@ -3,6 +3,7 @@
 
 <head>
     <title>COVID-19 Global</title>
+    <link rel="shortcut icon" type="image/jpg" href="img/covid.ico"/>
     <script src="js/jquery-3.4.1.min.js"></script>
     <script src="js/jquery-jvectormap-2.0.5.min.js"></script>
     <script src="js/jquery-jvectormap-world-merc.js"></script>
@@ -10,19 +11,28 @@
     <script src="js/Chart-2.9.3.min.js"></script>
     <link rel="stylesheet" href="css/jquery-jvectormap-2.0.5.css" type="text/css" media="screen" />
     <link rel="stylesheet" href="css/gh-fork-ribbon-0.2.3.min.css" />
-    <link rel="stylesheet" href="css/style.css" type="text/css" media="all" />
+    
     <link rel="stylesheet" href="css/global_page.css" type="text/css" media="all" />
     <link rel="stylesheet" href="css/swtich.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="css/style.css" type="text/css" media="all" />
     <script src="utils/map_codes.js"></script>
 </head>
 
 <body>
-    <a class="github-fork-ribbon" href="https://github.com/mayurmadnani/covidtracer" data-ribbon="Fork me on GitHub" title="Fork me on GitHub">Fork me on GitHub</a>
-    <ul class="nav">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="Global.html">Global</a></li>
-        <li><a href="India.html">India</a></li>
-    </ul>
+     <a class="github-fork-ribbon" href="https://github.com/mayurmadnani/covidtracer" data-ribbon="Fork me on GitHub" title="Fork me on GitHub">Fork me on GitHub</a>
+    <div class="header">
+    	<div class="logo">
+			<img src="img/coronavirus.png" />
+			CovidTracer
+		</div>
+		<div class="nav-bar">
+			<ul class="nav">
+				<li><a href="index.html">Home</a></li>
+				<li style="background-color:#F7B301;"><a href="Global.html">Global</a></li>
+				<li><a href ="India.html">India</a></li>
+			</ul>
+		</div>
+	</div>
 
     <div class="map-container">
         <div id="map"></div>
