@@ -1,8 +1,8 @@
 # COVID-19 Tracer
 
-Source of the main site: 
-## https://covidtracer.netlify.com/
-## https://mayurmadnani.github.io/covidtracer/
+Deployed on:
+- [Netlify](https://covidtracer.netlify.com/)
+- [GH Pages](https://mayurmadnani.github.io/covidtracer/)
 
 Data sources:
 
