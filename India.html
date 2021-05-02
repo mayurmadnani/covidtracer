@@ -26,6 +26,7 @@
 				<li><a href="index.html">Home</a></li>
 				<li><a href="Global.html">Global</a></li>
 				<li style="background-color:#F7B301;"><a href ="India.html">India</a></li>
+                <li><a href ="Vaccine.html">Vaccine slots</a></li>
 			</ul>
 		</div>
 	</div>
@@ -51,7 +52,7 @@
         .then(response => response.json())
         .then(data => {
             var india_data = {}
-            cols_list = ["State/UT", "Active", "Cured", "Death", "Positive"];
+            cols_list = ["State/UT", "Prev. Active", "Active", "Prev. Cured","Cured", "Prev. Death", "Death", "Prev. Positive","Positive"];
             new_counts_cols = ['new_active', 'new_cured', 'new_death', 'new_positive']
             old_counts_cols = ['active', 'cured', 'death', 'positive']
 
@@ -99,7 +100,6 @@
                 row.append(cell);
                 for (var count in new_counts_cols) {
                     count = parseInt(count)
-                    cell = $("<td />");
                     var new_count = india_data[state][new_counts_cols[count]]
                     var old_count = india_data[state][old_counts_cols[count]]
                     var sign = new_count - old_count
@@ -118,8 +118,12 @@
                             arrowhead += down_green;
                         }
                     }
-                    cell.html(new_count + arrowhead);
-                    row.append(cell);
+                    var old_cell = $("<td />");
+                    old_cell.html(old_count)
+                    row.append(old_cell);
+                    var new_cell = $("<td />");
+                    new_cell.html(new_count + arrowhead);
+                    row.append(new_cell);
                 }
             }
 
