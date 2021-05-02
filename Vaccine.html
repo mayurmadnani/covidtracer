@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>COVID-19 India</title>
+    <script src="js/jquery-3.4.1.min.js"></script>
+    <script src="js/moment-2.24.0.min.js"></script>
+    <link rel="shortcut icon" type="image/jpg" href="img/covid.ico" />
+    <link rel="stylesheet" href="css/gh-fork-ribbon-0.2.3.min.css" />
+    <link rel="stylesheet" href="css/style.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="css/vaccine_page.css" type="text/css" media="all" />
+</head>
+
+<body>
+    <a class="github-fork-ribbon" href="https://github.com/mayurmadnani/covidtracer" data-ribbon="Fork me on GitHub"
+        title="Fork me on GitHub">Fork me on GitHub</a>
+    <div class="header">
+        <div class="logo">
+            <img src="img/coronavirus.png" />
+            CovidTracer
+        </div>
+        <div class="nav-bar">
+            <ul class="nav">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="Global.html">Global</a></li>
+                <li><a href="India.html">India</a></li>
+                <li style="background-color:#F7B301;"><a href="Vaccine.html">Vaccine slots</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <form id="profileForm">
+        <table>
+            <tr>
+                <td>Pincode:</td>
+                <td><input type="text" name="pincode" id="pincode" /></td>
+            </tr>
+            <tr>
+                <td>Date:</td>
+                <td><input type="date" name="date" id="date" /></td>
+            </tr>
+            <tr>
+                <td>
+                    <button type="submit">Check vaccine Slots</button>
+                </td>
+            </tr>
+        </table>
+    </form>
+
+    <div id="sessions" />
+
+    <button id="backToTopButton">
+        <span class="chevron"></span>
+    </button>
+
+    <script src="utils/back-to-top.js"></script>
+</body>
+
+</html>
+<script>
+    $(document).ready(function () {
+        $('#profileForm').on('submit', function (e) {
+            e.preventDefault();
+            var pincode = $('#pincode').val();
+            var date = moment($("#date").val(), "YYYY-MM-DD").format("DD-MM-YYYY");
+            fetch(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByPin?pincode=${pincode}&date=${date}`)
+                .then(response => response.json())
+                .then(data => {
+                    if(data.sessions==null || data.sessions.length==0)
+                        window.alert("No data available");
+                    else
+                        showSessions(data);
+                });
+        });
+    });
+    showSessions = data => {
+        $(".session").remove();
+        const sessionsDiv = document.querySelector('#sessions');
+        data.sessions.forEach(session => {
+            const sessionElement = document.createElement('p');
+            sessionElement.setAttribute("class", "session");
+            sessionElement.innerText = `Center: ${session.name},${session.block_name},${session.district_name},${session.state_name}\n` +
+                `Time: ${session.date} ${session.from}-${session.to}\n`+
+                `Fee: ${session.fee_type}\n`+
+                `Capacity: ${session.available_capacity}\n`+
+                `Vaccine: ${session.vaccine}` ;
+            sessionsDiv.append(sessionElement);
+        });
+    }
+</script>
