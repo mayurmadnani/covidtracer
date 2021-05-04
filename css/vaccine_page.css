@@ -2,7 +2,6 @@
     display: flex;
     flex-wrap: nowrap;
     justify-content: center;
-    margin: 100px;
 }
 
 #sessions {
@@ -10,18 +9,14 @@
     justify-content: center;
     text-align: center;
     align-content: center;
-    margin-left: 30px;
-    margin-right: 30px;
 }
 
 .session {
-    margin-bottom: 5px;
-    background-color: #FFE0B0;
+    background-color: lightblue;
 }
 
 
 button.submit {
-    background-color: #4CAF50; /* Green */
     border: none;
     color: white;
     padding: 15px 32px;
